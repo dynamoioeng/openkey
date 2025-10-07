@@ -21,8 +21,8 @@ export function priceScore(
     return Math.max(0, Math.round(100 * ((price - floor) / (min - floor))));
   }
 
-  // Above budget: gentler penalty (0 at 100% above max)
-  const cap = max * 2;
+  // Above budget: very harsh penalty (0 at 10% above max)
+  const cap = max * 1.10;
   return Math.max(0, Math.round(100 * (1 - (price - max) / (cap - max))));
 }
 
