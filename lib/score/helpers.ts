@@ -37,3 +37,4 @@ export function kmDistance(
 
   return 2 * R * Math.asin(Math.sqrt(h));
 }
+

@@ -38,3 +38,4 @@ const AMENITY_VOCAB = [
     const matches = requested.filter((a) => projectAmenities.includes(a));
     return Math.round((matches.length / requested.length) * 100);
   }
+

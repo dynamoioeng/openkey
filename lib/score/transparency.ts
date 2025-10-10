@@ -11,3 +11,4 @@ export function docsCompletenessScore(docs: Record<string, boolean>): number {
     const available = requiredDocs.filter((key) => docs?.[key]).length;
     return Math.round((available / requiredDocs.length) * 100);
   }
+

@@ -19,3 +19,4 @@ export function cosineSimFromText(a: string, b: string): number {
     const denominator = Math.sqrt(setA.size * setB.size) || 1;
     return Math.min(1, intersection / denominator);
   }
+

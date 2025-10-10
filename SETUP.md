@@ -21,6 +21,24 @@ Create a `.env.local` file in the `openkey-web` directory with the following con
 # Model used: gpt-4o-mini (fast, cost-effective, good for structured extraction)
 #
 OPENAI_API_KEY=your_openai_api_key_here
+
+# Google Maps API Configuration (Optional)
+#
+# Required for enriching projects with nearby places data
+# Get your API key from: https://console.cloud.google.com/google/maps-apis
+#
+# Used by scripts/enrich-projects.ts to find nearby:
+# - Parks, schools, transit stations
+# - Hospitals, shopping malls, restaurants
+# - Gyms, golf courses, beaches
+#
+# Enable these APIs in Google Cloud Console:
+# - Geocoding API
+# - Places API (Nearby Search)
+#
+# Estimated cost: ~$0.29 per project (9 API calls × $0.032/call)
+#
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 ```
 
 ## Getting Started
@@ -33,5 +51,29 @@ OPENAI_API_KEY=your_openai_api_key_here
 ## Without OpenAI API Key
 
 The app will still work without an OpenAI API key, but will use a basic fallback parser that returns neutral search results. For the best experience, we recommend setting up the OpenAI API key.
+
+## Enriching Projects with Nearby Places
+
+To enrich projects with nearby amenities data using Google Maps:
+
+1. Add `GOOGLE_MAPS_API_KEY` to your `.env.local` file
+2. Enable Geocoding API and Places API in Google Cloud Console
+3. Run the enrichment script:
+
+```bash
+npm run enrich
+# or
+npx tsx scripts/enrich-projects.ts
+```
+
+The script will:
+- Check each project for existing nearby data (skip if present)
+- Fetch nearby parks, schools, transit, hospitals, malls, restaurants, gyms, golf courses, and beaches
+- Add 1-second delay between projects to respect rate limits
+- Save progress after each project (can resume if interrupted)
+- Update `lib/data/projects.ts` with enriched data
+- Display cost estimate at completion
+
+**Note:** Enrichment is optional. The app works fine without nearby data.
 
 

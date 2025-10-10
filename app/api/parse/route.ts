@@ -7,6 +7,12 @@ const AREA_COORDINATES: Record<
   string,
   { lat: number; lon: number; name: string }
 > = {
+  // City-level
+  dubai: { lat: 25.2048, lon: 55.2708, name: "Dubai (city-wide)" },
+  "abu dhabi": { lat: 24.4539, lon: 54.3773, name: "Abu Dhabi (city-wide)" },
+  sharjah: { lat: 25.3463, lon: 55.4209, name: "Sharjah (city-wide)" },
+  
+  // Neighborhoods
   "dubai marina": { lat: 25.08, lon: 55.139, name: "Dubai Marina" },
   "palm jumeirah": { lat: 25.112, lon: 55.138, name: "Palm Jumeirah" },
   "downtown dubai": { lat: 25.197, lon: 55.274, name: "Downtown Dubai" },
@@ -57,17 +63,17 @@ const extractionFunctionSchema = {
             name: {
               type: "string",
               description:
-                "Dubai area name: Dubai Marina, Palm Jumeirah, Downtown Dubai, JBR, Business Bay, Dubai Hills, City Walk, DIFC, JLT",
+                "Location name. CITY-LEVEL: Dubai, Abu Dhabi, Sharjah. NEIGHBORHOODS: Dubai Marina, Palm Jumeirah, Downtown Dubai, JBR, Business Bay, Dubai Hills, City Walk, DIFC, JLT",
             },
             inference: {
               type: "string",
               description:
-                "How this was inferred (e.g., 'explicit mention', 'near beach → JBR/Marina', 'downtown → Downtown Dubai')",
+                "How this was inferred (e.g., 'explicit mention', 'near beach → JBR/Marina', 'in Dubai → Dubai', 'downtown → Downtown Dubai')",
             },
           },
         },
         description:
-          "Map natural language like 'near beach', 'close to downtown', 'Palm area' to known Dubai locations",
+          "Map natural language to locations. Handle BOTH city-level ('in Dubai') and neighborhood-level ('in Dubai Marina'). 'near beach' → JBR/Marina, 'in dubai' → Dubai (city-wide)",
       },
       preferredHandoverMonth: {
         type: ["string", "null"],
@@ -167,9 +173,16 @@ export async function POST(req: NextRequest) {
               "  • 'at least 2M' → budgetMin=2000000, budgetMax=null\n" +
               "  • 'from 2M' → budgetMin=2000000, budgetMax=null\n\n" +
               "Location Inference:\n" +
-              "- 'near beach' → JBR or Dubai Marina\n" +
-              "- 'downtown' → Downtown Dubai\n" +
-              "- 'family friendly' → infer kids_area, school_nearby, park_nearby amenities",
+              "- CITY-LEVEL queries:\n" +
+              "  • 'in Dubai' → Dubai (city-wide)\n" +
+              "  • 'in Abu Dhabi' → Abu Dhabi (city-wide)\n" +
+              "  • 'properties in dubai' → Dubai (city-wide)\n" +
+              "- NEIGHBORHOOD-LEVEL queries:\n" +
+              "  • 'near beach' → JBR or Dubai Marina\n" +
+              "  • 'downtown' → Downtown Dubai\n" +
+              "  • 'in Dubai Marina' → Dubai Marina\n" +
+              "- IMPLICIT needs:\n" +
+              "  • 'family friendly' → infer kids_area, school_nearby, park_nearby amenities",
           },
           {
             role: "user",

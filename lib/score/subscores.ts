@@ -53,7 +53,7 @@ export function locationScore(
   preferredAreas: { lat: number; lon: number }[],
   projectLocation: { lat: number; lon: number }
 ): number {
-  if (!preferredAreas || preferredAreas.length === 0) return 60; // neutral
+  if (!preferredAreas || preferredAreas.length === 0) return 80; // neutral
 
   // Find closest preferred area
   const distances = preferredAreas.map((area) =>

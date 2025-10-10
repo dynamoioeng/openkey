@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "enrich": "tsx scripts/enrich-projects.ts"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.2",
     "next": "15.5.4",
     "openai": "^6.2.0",
     "react": "19.1.0",
@@ -19,6 +21,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
